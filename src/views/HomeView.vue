@@ -25,6 +25,8 @@ function toggleTheme() {
 
       <div class="avatar" aria-label="Profile photo placeholder">SH</div>
 
+      <RouterLink to="/about" class="about-button">About</RouterLink>
+
       <h1>Sam Hassler</h1>
       <p class="tagline">I build digital experiences and love connecting with people.</p>
 
@@ -40,8 +42,6 @@ function toggleTheme() {
         >
           {{ link.label }}
         </a>
-
-        <RouterLink to="/about" class="link-button secondary">About</RouterLink>
       </nav>
     </div>
   </main>
@@ -129,6 +129,25 @@ h1 {
   opacity: 0.8;
 }
 
+.about-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 120px;
+  min-height: 36px;
+  margin: 0 auto 18px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);
+}
+
 .link-stack {
   margin-top: 24px;
   display: flex;
@@ -156,19 +175,15 @@ h1 {
   animation: button-bounce 0.2s ease;
 }
 
-.link-button.secondary {
-  background: #f5f3ff;
-  border-color: rgba(168, 85, 247, 0.2);
+.about-button:hover,
+.link-button:hover {
+  transform: translateY(-2px);
 }
 
 .page-shell.dark .link-button {
   background: rgba(148, 163, 184, 0.12);
   color: #f9fafb;
   border-color: rgba(148, 163, 184, 0.18);
-}
-
-.page-shell.dark .link-button.secondary {
-  background: rgba(168, 85, 247, 0.12);
 }
 
 .link-button:hover {
