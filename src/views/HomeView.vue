@@ -7,7 +7,6 @@ const theme = useTheme()
 
 const links = [
   { label: 'Portfolio', url: 'https://samhassler.com', icon: 'mdi-earth' },
-  { label: 'Dribbble', url: 'https://dribbble.com', icon: 'mdi-dribbble' },
   { label: 'LinkedIn', url: 'https://www.linkedin.com', icon: 'mdi-linkedin' },
   { label: 'Email', url: 'mailto:sam@example.com', icon: 'mdi-email-outline' },
 ]
@@ -78,6 +77,7 @@ const isDark = computed({
   min-height: 100vh;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   background:
     radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.12), transparent 22%),
     radial-gradient(circle at 75% 30%, rgba(168, 85, 247, 0.1), transparent 25%),
@@ -94,6 +94,7 @@ const isDark = computed({
   border-radius: 50%;
   border: 1px solid rgba(168, 85, 247, 0.12);
   pointer-events: none;
+  z-index: 0;
 }
 
 .home-page::before {
@@ -109,6 +110,8 @@ const isDark = computed({
 }
 
 :deep(.v-card) {
+  position: relative;
+  z-index: 1;
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(168, 85, 247, 0.12);
   box-shadow: 0 20px 60px rgba(76, 29, 149, 0.08);
