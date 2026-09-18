@@ -1,216 +1,239 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useTheme } from 'vuetify'
+import { computed } from 'vue'
+import LinkButton from '@/components/LinkButton.vue'
 
-const isDark = ref(false)
+const theme = useTheme()
 
 const links = [
-  { label: 'Portfolio', href: 'https://samhassler.com', ariaLabel: 'Visit my portfolio' },
-  { label: 'Dribbble', href: 'https://dribbble.com', ariaLabel: 'Visit my Dribbble' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com', ariaLabel: 'Visit my LinkedIn' },
-  { label: 'Email', href: 'mailto:sam@example.com', ariaLabel: 'Send me an email' },
+  { label: 'Portfolio', url: 'https://samhassler.com', icon: 'mdi-earth' },
+  { label: 'Dribbble', url: 'https://dribbble.com', icon: 'mdi-dribbble' },
+  { label: 'LinkedIn', url: 'https://www.linkedin.com', icon: 'mdi-linkedin' },
+  { label: 'Email', url: 'mailto:sam@example.com', icon: 'mdi-email-outline' },
 ]
 
-function toggleTheme() {
-  isDark.value = !isDark.value
-}
+const isDark = computed({
+  get: () => theme.global.current.value.dark,
+  set: (value: boolean) => {
+    theme.global.name.value = value ? 'dark' : 'light'
+  },
+})
 </script>
 
 <template>
-  <main :class="['page-shell', { dark: isDark }]">
-    <div class="card">
-      <button class="theme-toggle" type="button" @click="toggleTheme" aria-label="Toggle color theme">
-        {{ isDark ? 'Light mode' : 'Dark mode' }}
-      </button>
+  <v-app>
+    <v-main class="home-page d-flex align-center justify-center pa-6">
+      <v-container class="py-10">
+        <v-row justify="center">
+          <v-col cols="12" sm="8" md="6" lg="4">
+            <v-card class="home-card pa-6 text-center position-relative" rounded="xl" elevation="6">
+              <button
+                type="button"
+                class="theme-toggle"
+                :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+                @click="isDark = !isDark"
+              >
+                <span class="toggle-track" :class="{ dark: isDark }">
+                  <span class="toggle-thumb">
+                    <v-icon :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'" size="12" />
+                  </span>
+                </span>
+              </button>
 
-      <div class="avatar" aria-label="Profile photo placeholder">SH</div>
+              <v-avatar size="96" color="deep-purple-lighten-4" class="mb-2 text-deep-purple-darken-4 font-weight-bold">
+                SH
+              </v-avatar>
 
-      <RouterLink to="/about" class="about-button">About</RouterLink>
+              <v-btn
+                to="/about"
+                class="mb-5 about-button"
+                color="deep-purple-lighten-4"
+                variant="flat"
+                size="small"
+                rounded="pill"
+              >
+                <span class="button-text">About</span>
+              </v-btn>
 
-      <h1>Sam Hassler</h1>
-      <p class="tagline">I build digital experiences and love connecting with people.</p>
+              <h1 class="text-h4 font-weight-bold mb-2">Sam Hassler</h1>
+              <p class="text-body-2 mb-4 text-medium-emphasis">
+                I build digital experiences and love connecting with people.
+              </p>
 
-      <nav class="link-stack" aria-label="Social links">
-        <a
-          v-for="link in links"
-          :key="link.label"
-          :href="link.href"
-          :aria-label="link.ariaLabel"
-          class="link-button"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ link.label }}
-        </a>
-      </nav>
-    </div>
-  </main>
+              <v-list class="link-list pa-0" density="comfortable" nav>
+                <v-list-item v-for="link in links" :key="link.label" class="link-list-item px-0 py-3">
+                  <LinkButton :label="link.label" :url="link.url" :icon="link.icon" />
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-.page-shell {
+.home-page {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: #f4f5f7;
-  color: #1f2937;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-.page-shell.dark {
-  background: #111827;
-  color: #f9fafb;
-}
-
-.card {
   position: relative;
-  width: min(100%, 480px);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 28px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-  padding: 32px 20px 24px;
-  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.12), transparent 22%),
+    radial-gradient(circle at 75% 30%, rgba(168, 85, 247, 0.1), transparent 25%),
+    radial-gradient(circle at 50% 82%, rgba(147, 197, 253, 0.12), transparent 20%),
+    linear-gradient(135deg, #f7f3ff 0%, #ffffff 52%, #f9f7ff 100%);
 }
 
-.dark .card {
-  background: rgba(17, 24, 39, 0.9);
-  border-color: rgba(148, 163, 184, 0.25);
-  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.5);
+.home-page::before,
+.home-page::after {
+  content: '';
+  position: absolute;
+  width: 540px;
+  height: 540px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.12);
+  pointer-events: none;
+}
+
+.home-page::before {
+  top: -120px;
+  left: -120px;
+  background: radial-gradient(circle at center, rgba(196, 181, 253, 0.12), transparent 62%);
+}
+
+.home-page::after {
+  right: -110px;
+  bottom: -110px;
+  background: radial-gradient(circle at center, rgba(216, 180, 254, 0.12), transparent 60%);
+}
+
+:deep(.v-card) {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(168, 85, 247, 0.12);
+  box-shadow: 0 20px 60px rgba(76, 29, 149, 0.08);
+}
+
+:deep(.v-btn__content) {
+  justify-content: center;
 }
 
 .theme-toggle {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  top: 14px;
+  right: 14px;
+  border: none;
   background: transparent;
-  color: inherit;
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-1px);
-  background: rgba(148, 163, 184, 0.1);
+.toggle-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 30px;
+  border-radius: 999px;
+  background: #e9d5ff;
+  transition: background-color 0.25s ease;
+  box-shadow: inset 0 0 0 1px rgba(109, 40, 217, 0.14);
 }
 
-.avatar {
-  width: 100px;
-  height: 100px;
-  margin: 12px auto 18px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #9ca3af, #d1d5db);
+.toggle-track.dark {
+  background: #312e81;
+}
+
+.toggle-thumb {
+  position: absolute;
+  left: 4px;
   display: grid;
   place-items: center;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  font-size: 1.5rem;
-  color: #111827;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #6d28d9;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+  transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
 
-h1 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 2.5rem);
-  line-height: 1.1;
-}
-
-.tagline {
-  margin: 10px auto 0;
-  max-width: 300px;
-  font-size: 0.96rem;
-  color: inherit;
-  opacity: 0.8;
+.toggle-track.dark .toggle-thumb {
+  transform: translateX(22px);
+  background: #1f2937;
+  color: #f8fafc;
 }
 
 .about-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
+  display: flex;
+  margin: 0 auto 18px;
   width: 120px;
   min-height: 36px;
-  margin: 0 auto 18px;
-  border-radius: 999px;
-  background: #0f172a;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 0.82rem;
+  white-space: nowrap;
+  color: #4c1d95 !important;
+  background-color: #e9d5ff !important;
+}
+
+.link-list {
+  margin-top: 6px;
+}
+
+.link-list-item {
+  min-height: 0;
+}
+
+.home-link-button {
+  color: #4c1d95 !important;
+  background-color: #f3e8ff !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, background-color 0.18s ease;
+}
+
+.home-link-button:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 12px 26px rgba(109, 40, 217, 0.18);
+  filter: brightness(1.02);
+}
+
+.home-link-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.button-text {
+  color: #4c1d95;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);
 }
 
-.link-stack {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+:global(body) {
+  margin: 0;
+  background: linear-gradient(135deg, #f4f0ff 0%, #ffffff 46%, #f4f0ff 100%);
 }
 
-.link-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 52px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 700;
-  color: #111827;
-  background: #edf2ff;
-  border: 1px solid rgba(59, 130, 246, 0.14);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.08);
-  animation: button-bounce 0.2s ease;
+:global(.v-theme--dark body) {
+  background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
 }
 
-.about-button:hover,
-.link-button:hover {
-  transform: translateY(-2px);
+:global(.v-theme--dark .home-card) {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.48) !important;
 }
 
-.page-shell.dark .link-button {
-  background: rgba(148, 163, 184, 0.12);
-  color: #f9fafb;
-  border-color: rgba(148, 163, 184, 0.18);
+:global(.v-theme--dark .text-medium-emphasis) {
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
-.link-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.12);
+:global(.v-theme--dark .home-link-button),
+:global(.v-theme--dark .about-button) {
+  background-color: #312e81 !important;
+  color: #f8fafc !important;
 }
 
-.link-button:active {
-  animation: button-bounce 0.3s ease;
+:global(.v-theme--dark .button-text) {
+  color: #f8fafc !important;
 }
 
-@keyframes button-bounce {
-  0% { transform: scale(1); }
-  30% { transform: scale(0.97); }
-  60% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-@media (max-width: 480px) {
-  .card {
-    padding: 28px 16px 18px;
-    border-radius: 22px;
-  }
-
-  .theme-toggle {
-    top: 12px;
-    right: 12px;
-  }
+:global(.v-theme--dark .v-avatar) {
+  background: #a78bfa !important;
+  color: #111827 !important;
 }
 </style>
