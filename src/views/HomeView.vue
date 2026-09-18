@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const isDark = ref(false)
 
@@ -39,6 +40,8 @@ function toggleTheme() {
         >
           {{ link.label }}
         </a>
+
+        <RouterLink to="/about" class="link-button secondary">About</RouterLink>
       </nav>
     </div>
   </main>
@@ -153,10 +156,19 @@ h1 {
   animation: button-bounce 0.2s ease;
 }
 
+.link-button.secondary {
+  background: #f5f3ff;
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
 .page-shell.dark .link-button {
   background: rgba(148, 163, 184, 0.12);
   color: #f9fafb;
   border-color: rgba(148, 163, 184, 0.18);
+}
+
+.page-shell.dark .link-button.secondary {
+  background: rgba(168, 85, 247, 0.12);
 }
 
 .link-button:hover {
